@@ -7,6 +7,7 @@ import com.deysoupreet.task.management.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -16,7 +17,7 @@ public class TaskController {
     private final UserRepository userRepository;
 
     public TaskController(TaskRepository taskRepository,
-                          UserRepository userRepository) {
+            UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
     }
@@ -36,5 +37,52 @@ public class TaskController {
         }
 
         return taskRepository.save(task);
+    }
+
+    @GetMapping
+    public List<Task> getAllTasks(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Long assignedTo) {
+
+        if (status != null) {
+            return taskRepository.findByStatus(status);
+        }
+
+        if (assignedTo != null) {
+            return taskRepository.findByAssignedToId(assignedTo);
+        }
+
+        return taskRepository.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Task getTaskById(@PathVariable Long id) {
+        return taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+    }
+
+    @PutMapping("/{id}")
+    public Task updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
+
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        task.setTitle(updatedTask.getTitle());
+        task.setDescription(updatedTask.getDescription());
+        task.setStatus(updatedTask.getStatus());
+
+        if (updatedTask.getAssignedTo() != null) {
+            User user = userRepository.findById(updatedTask.getAssignedTo().getId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            task.setAssignedTo(user);
+        }
+
+        return taskRepository.save(task);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteTask(@PathVariable Long id) {
+        taskRepository.deleteById(id);
+        return "Task deleted successfully";
     }
 }
