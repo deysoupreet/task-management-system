@@ -21,11 +21,18 @@ public class JwtFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request,
-                         ServletResponse response,
-                         FilterChain chain)
+            ServletResponse response,
+            FilterChain chain)
             throws IOException, ServletException {
 
         HttpServletRequest req = (HttpServletRequest) request;
+
+        String path = req.getRequestURI();
+
+        if (path.startsWith("/api/auth")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         String authHeader = req.getHeader("Authorization");
 
@@ -35,13 +42,10 @@ public class JwtFilter implements Filter {
             try {
                 String email = jwtUtil.extractEmail(token);
 
-                // 🔥 THIS IS THE FIX
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(
-                                email,
-                                null,
-                                Collections.emptyList()
-                        );
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        email,
+                        null,
+                        Collections.emptyList());
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
 

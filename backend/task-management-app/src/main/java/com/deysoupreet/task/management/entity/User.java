@@ -1,8 +1,12 @@
 package com.deysoupreet.task.management.entity;
 
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -11,7 +15,7 @@ import lombok.*;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -24,5 +28,12 @@ public class User {
     private String Role;
 
     private LocalDateTime createdAt = LocalDateTime.now();
-    
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "assignedTo")
+    private List<Task> assignedTasks;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private List<Task> createdTasks;
 }

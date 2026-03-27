@@ -4,7 +4,11 @@ import com.deysoupreet.task.management.entity.Task;
 import com.deysoupreet.task.management.entity.User;
 import com.deysoupreet.task.management.repository.TaskRepository;
 import com.deysoupreet.task.management.repository.UserRepository;
+import com.deysoupreet.task.management.util.SecurityUtil;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.List;
@@ -67,22 +71,39 @@ public class TaskController {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
+        String email = SecurityUtil.getLoggedInUserEmail();
+
+        if (task.getAssignedTo() != null &&
+                !task.getAssignedTo().getEmail().equals(email)) {
+            throw new RuntimeException("Not authorized to update this task");
+        }
+
         task.setTitle(updatedTask.getTitle());
         task.setDescription(updatedTask.getDescription());
         task.setStatus(updatedTask.getStatus());
-
-        if (updatedTask.getAssignedTo() != null) {
-            User user = userRepository.findById(updatedTask.getAssignedTo().getId())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            task.setAssignedTo(user);
-        }
 
         return taskRepository.save(task);
     }
 
     @DeleteMapping("/{id}")
     public String deleteTask(@PathVariable Long id) {
-        taskRepository.deleteById(id);
+
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        String email = SecurityUtil.getLoggedInUserEmail();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean isAdmin = user.getRole().equals("ADMIN");
+        boolean isCreator = task.getCreatedBy().getEmail().equals(email);
+
+        if (!isAdmin && !isCreator) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not authorized to delete this task");
+        }
+
+        taskRepository.delete(task);
         return "Task deleted successfully";
     }
 }
