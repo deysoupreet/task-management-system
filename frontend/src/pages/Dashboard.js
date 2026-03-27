@@ -40,7 +40,7 @@ function Dashboard() {
         {
           title,
           description,
-          createdBy: { id: 1 }, // keep simple
+          createdBy: { id: 1 }, 
         },
         {
           headers: {
@@ -146,6 +146,9 @@ function Dashboard() {
 
             <button onClick={() => markDone(task)}>Mark Done</button>
             <button onClick={() => deleteTask(task.id)}>Delete</button>
+            <button onClick={() => (window.location.href = "/users")}>
+              View Users
+            </button>
           </div>
         ))
       )}
