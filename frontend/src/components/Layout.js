@@ -5,6 +5,7 @@ function Layout({ children }) {
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>
+      
       {/* Sidebar */}
       <div
         style={{
@@ -13,12 +14,25 @@ function Layout({ children }) {
           padding: "20px",
           display: "flex",
           flexDirection: "column",
-          gap: "15px",
+          gap: "10px",
         }}
       >
         <h2>TaskApp</h2>
 
+        <NavItem to="/dashboard" label="Home" current={location.pathname} />
+        <NavItem to="/tasks" label="Tasks" current={location.pathname} />
+        <NavItem to="/create" label="Create Task" current={location.pathname} />
+        <NavItem to="/users" label="Users" current={location.pathname} />
+
         <button
+          style={{
+            marginTop: "auto",
+            padding: "8px",
+            background: "#f44336",
+            border: "none",
+            borderRadius: "6px",
+            color: "white",
+          }}
           onClick={() => {
             localStorage.removeItem("token");
             window.location.href = "/";
@@ -26,27 +40,6 @@ function Layout({ children }) {
         >
           Logout
         </button>
-
-        <NavItem
-          to="/dashboard"
-          label="Home"
-          active={location.pathname === "/dashboard"}
-        />
-        <NavItem
-          to="/tasks"
-          label="Tasks"
-          active={location.pathname === "/tasks"}
-        />
-        <NavItem
-          to="/create"
-          label="Create Task"
-          active={location.pathname === "/create"}
-        />
-        <NavItem
-          to="/users"
-          label="Users"
-          active={location.pathname === "/users"}
-        />
       </div>
 
       {/* Content */}
@@ -54,7 +47,8 @@ function Layout({ children }) {
         style={{
           flex: 1,
           padding: "30px",
-          overflowY: "auto",
+          maxWidth: "900px",
+          margin: "0 auto",
         }}
       >
         {children}
@@ -63,14 +57,18 @@ function Layout({ children }) {
   );
 }
 
-function NavItem({ to, label, active }) {
+function NavItem({ to, label, current }) {
+  const active = current === to;
+
   return (
     <Link
       to={to}
       style={{
-        color: active ? "#4CAF50" : "white",
+        padding: "10px",
+        borderRadius: "6px",
         textDecoration: "none",
-        fontWeight: active ? "bold" : "normal",
+        background: active ? "#2a2a2a" : "transparent",
+        color: active ? "#4CAF50" : "white",
       }}
     >
       {label}

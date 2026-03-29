@@ -7,10 +7,12 @@ function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  <h2 style={{ marginBottom: "20px" }}>Tasks</h2>;
+
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:8080/api/auth/login?email=${email}&password=${password}`
+        `http://localhost:8080/api/auth/login?email=${email}&password=${password}`,
       );
 
       localStorage.setItem("token", res.data);
@@ -21,18 +23,22 @@ function Login() {
   };
 
   return (
-    <div style={{
-      height: "100vh",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center"
-    }}>
-      <div style={{
-        background: "#1e1e1e",
-        padding: "30px",
-        borderRadius: "10px",
-        width: "300px"
-      }}>
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <div
+        style={{
+          background: "#1e1e1e",
+          padding: "30px",
+          borderRadius: "10px",
+          width: "300px",
+        }}
+      >
         <h2>Login</h2>
 
         <input
@@ -58,7 +64,7 @@ function Login() {
 
 const input = {
   width: "100%",
-  marginBottom: "10px"
+  marginBottom: "10px",
 };
 
 const btn = {
@@ -67,7 +73,7 @@ const btn = {
   background: "#4CAF50",
   border: "none",
   borderRadius: "6px",
-  color: "white"
+  color: "white",
 };
 
 export default Login;

@@ -5,13 +5,15 @@ function Users() {
   const [users, setUsers] = useState([]);
   const token = localStorage.getItem("token");
 
+  <h2 style={{ marginBottom: "20px" }}>Tasks</h2>;
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const res = await axios.get("http://localhost:8080/api/users", {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         setUsers(res.data);
@@ -27,9 +29,11 @@ function Users() {
     <div>
       <h2>Users (Admin)</h2>
 
-      {users.map(user => (
+      {users.map((user) => (
         <div key={user.id}>
-          <p>{user.email} - {user.role}</p>
+          <p>
+            {user.email} - {user.role}
+          </p>
         </div>
       ))}
     </div>

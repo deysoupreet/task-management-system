@@ -7,6 +7,8 @@ function Tasks() {
 
   const token = localStorage.getItem("token");
 
+  <h2 style={{ marginBottom: "20px" }}>Tasks</h2>;
+
   const fetchTasks = async () => {
     try {
       const url = filter
@@ -52,7 +54,7 @@ function Tasks() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       fetchTasks();
@@ -81,24 +83,32 @@ function Tasks() {
         <p>No tasks found</p>
       ) : (
         tasks.map((task) => (
-          <div
-            key={task.id}
-            style={{
-              background: "#1e1e1e",
-              padding: "15px",
-              marginBottom: "10px",
-              borderRadius: "8px",
-            }}
-          >
+          <div key={task.id} className="card">
             <h4>{task.title}</h4>
-            <p>{task.description}</p>
-            <p>Status: {task.status}</p>
+            <p style={{ color: "#aaa" }}>{task.description}</p>
 
-            <button style={btn} onClick={() => markDone(task)}>
-              Mark Done
+            <p>
+              Status:
+              <span
+                style={{
+                  color:
+                    task.status === "DONE"
+                      ? "#4CAF50"
+                      : task.status === "IN_PROGRESS"
+                        ? "#ff9800"
+                        : "#aaa",
+                  marginLeft: "5px",
+                }}
+              >
+                {task.status}
+              </span>
+            </p>
+
+            <button className="btn btn-green" onClick={() => markDone(task)}>
+              Done
             </button>
 
-            <button style={btnDanger} onClick={() => deleteTask(task.id)}>
+            <button className="btn btn-red" onClick={() => deleteTask(task.id)}>
               Delete
             </button>
           </div>

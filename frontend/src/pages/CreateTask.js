@@ -20,7 +20,7 @@ function CreateTask() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       alert("Task created!");
@@ -56,12 +56,17 @@ function CreateTask() {
   );
 }
 
+<h2 style={{ marginBottom: "20px" }}>Tasks</h2>;
+
 const input = {
   display: "block",
   marginBottom: "10px",
-  padding: "8px",
-  borderRadius: "5px",
+  // padding: "8px",
+  // borderRadius: "5px",
   border: "none",
+  padding: "10px",
+  borderRadius: "6px",
+  background: "#1e1e1e"
 };
 
 const btn = {
